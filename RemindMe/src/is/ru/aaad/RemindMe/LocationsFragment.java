@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import is.ru.aaad.RemindMe.Models.Location;
 
 /**
  * Created by Johannes Gunnar Heidarsson on 6.11.2014.
@@ -44,7 +45,7 @@ public class LocationsFragment extends ListFragment {
         page = getArguments().getInt("pageId", 0);
         title = getArguments().getString("pageTitle");
 
-        locationsStore = new LocationsStore();
+        locationsStore = LocationsStore.getInstance();
 
         setListAdapter(
                 new ArrayAdapter<String>(
@@ -55,14 +56,14 @@ public class LocationsFragment extends ListFragment {
         );
     }
 
-    /*
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.locations, container, false);
         //TextView pageTitle = (TextView) view.findViewById(R.id.title);
         //pageTitle.setText(page + " : " + title);
         return view;
-    }*/
+    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -79,23 +80,6 @@ public class LocationsFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         locationSelectedListener.OnLocationSelected(position);
         getListView().setItemChecked(position, true);
-        /*
-        LocationFragment locationFragment = (LocationFragment) getFragmentManager().findFragmentById(R.id.location_fragment);
-        //LocationFragment locationFragment = null;
-
-
-        if(locationFragment == null){
-            Log.d("LocationsFragment", "locationFragment does equals null");
-            Intent intent = new Intent(getActivity(), LocationActivity.class);
-            intent.putExtra("location_position", position);
-            startActivity(intent);
-
-        } else {
-            Log.d("LocationsFragment", "locationFragment does not equal null");
-            locationFragment.changeLocation(locationsStore.getLocationByPosition(position));
-        }
-        */
-
     }
 
     @Override
