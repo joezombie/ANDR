@@ -1,4 +1,4 @@
-package is.ru.aaad.RemindMe;
+package is.ru.aaad.RemindMe.Models;
 
 /**
  * Created by Johannes Gunnar Heidarsson on 6.11.2014.

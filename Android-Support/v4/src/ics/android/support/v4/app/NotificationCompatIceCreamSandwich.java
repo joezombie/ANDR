@@ -27,7 +27,7 @@ class NotificationCompatIceCreamSandwich {
             CharSequence contentTitle, CharSequence contentText, CharSequence contentInfo,
             RemoteViews tickerView, int number,
             PendingIntent contentIntent, PendingIntent fullScreenIntent, Bitmap largeIcon,
-            int progressMax, int progress, boolean progressIndeterminate) {
+            int mProgressMax, int mProgress, boolean mProgressIndeterminate) {
         Notification.Builder b = new Notification.Builder(context)
                 .setWhen(n.when)
                 .setSmallIcon(n.icon, n.iconLevel)
@@ -49,7 +49,7 @@ class NotificationCompatIceCreamSandwich {
                         (n.flags & Notification.FLAG_HIGH_PRIORITY) != 0)
                 .setLargeIcon(largeIcon)
                 .setNumber(number)
-                .setProgress(progressMax, progress, progressIndeterminate);
+                .setProgress(mProgressMax, mProgress, mProgressIndeterminate);
 
         return b.getNotification();
     }

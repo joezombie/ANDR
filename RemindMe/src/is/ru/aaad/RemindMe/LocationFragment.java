@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import is.ru.aaad.RemindMe.Models.Location;
 
 /**
  * Created by Johannes Gunnar Heidarsson on 6.11.2014.

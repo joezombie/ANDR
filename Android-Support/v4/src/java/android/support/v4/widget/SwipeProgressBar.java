@@ -99,8 +99,7 @@ final class SwipeProgressBar {
     void setTriggerPercentage(float triggerPercentage) {
         mTriggerPercentage = triggerPercentage;
         mStartTime = 0;
-        ViewCompat.postInvalidateOnAnimation(
-                mParent, mBounds.left, mBounds.top, mBounds.right, mBounds.bottom);
+        ViewCompat.postInvalidateOnAnimation(mParent);
     }
 
     /**
@@ -228,8 +227,7 @@ final class SwipeProgressBar {
                 drawTrigger(canvas, cx, cy);
             }
             // Keep running until we finish out the last cycle.
-            ViewCompat.postInvalidateOnAnimation(
-                    mParent, mBounds.left, mBounds.top, mBounds.right, mBounds.bottom);
+            ViewCompat.postInvalidateOnAnimation(mParent);
         } else {
             // Otherwise if we're in the middle of a trigger, draw that.
             if (mTriggerPercentage > 0 && mTriggerPercentage <= 1.0) {

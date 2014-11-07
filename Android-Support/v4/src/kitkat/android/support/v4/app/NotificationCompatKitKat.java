@@ -38,13 +38,11 @@ class NotificationCompatKitKat {
                 CharSequence contentTitle, CharSequence contentText, CharSequence contentInfo,
                 RemoteViews tickerView, int number,
                 PendingIntent contentIntent, PendingIntent fullScreenIntent, Bitmap largeIcon,
-                int progressMax, int progress, boolean progressIndeterminate, boolean showWhen,
+                int mProgressMax, int mProgress, boolean mProgressIndeterminate,
                 boolean useChronometer, int priority, CharSequence subText, boolean localOnly,
-                ArrayList<String> people, Bundle extras, String groupKey, boolean groupSummary,
-                String sortKey) {
+                Bundle extras, String groupKey, boolean groupSummary, String sortKey) {
             b = new Notification.Builder(context)
                 .setWhen(n.when)
-                .setShowWhen(showWhen)
                 .setSmallIcon(n.icon, n.iconLevel)
                 .setContent(n.contentView)
                 .setTicker(n.tickerText, tickerView)
@@ -67,14 +65,10 @@ class NotificationCompatKitKat {
                 .setNumber(number)
                 .setUsesChronometer(useChronometer)
                 .setPriority(priority)
-                .setProgress(progressMax, progress, progressIndeterminate);
+                .setProgress(mProgressMax, mProgress, mProgressIndeterminate);
             mExtras = new Bundle();
             if (extras != null) {
                 mExtras.putAll(extras);
-            }
-            if (people != null && !people.isEmpty()) {
-                mExtras.putStringArray(Notification.EXTRA_PEOPLE,
-                        people.toArray(new String[people.size()]));
             }
             if (localOnly) {
                 mExtras.putBoolean(NotificationCompatJellybean.EXTRA_LOCAL_ONLY, true);

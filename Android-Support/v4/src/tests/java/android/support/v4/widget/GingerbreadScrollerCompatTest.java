@@ -20,6 +20,6 @@ import android.os.Build;
 public class GingerbreadScrollerCompatTest extends ScrollerCompatTestBase {
 
     public GingerbreadScrollerCompatTest() {
-        super(9);
+        super(Build.VERSION_CODES.GINGERBREAD);
     }
 }

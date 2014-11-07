@@ -1,5 +1,7 @@
 package is.ru.aaad.RemindMe;
 
+import is.ru.aaad.RemindMe.Models.Location;
+
 import java.util.ArrayList;
 import java.util.List;
 

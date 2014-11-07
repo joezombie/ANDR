@@ -71,7 +71,7 @@ class NotificationCompatJellybean {
                 CharSequence contentTitle, CharSequence contentText, CharSequence contentInfo,
                 RemoteViews tickerView, int number,
                 PendingIntent contentIntent, PendingIntent fullScreenIntent, Bitmap largeIcon,
-                int progressMax, int progress, boolean progressIndeterminate,
+                int mProgressMax, int mProgress, boolean mProgressIndeterminate,
                 boolean useChronometer, int priority, CharSequence subText, boolean localOnly,
                 Bundle extras, String groupKey, boolean groupSummary, String sortKey) {
             b = new Notification.Builder(context)
@@ -98,7 +98,7 @@ class NotificationCompatJellybean {
                 .setNumber(number)
                 .setUsesChronometer(useChronometer)
                 .setPriority(priority)
-                .setProgress(progressMax, progress, progressIndeterminate);
+                .setProgress(mProgressMax, mProgress, mProgressIndeterminate);
             mExtras = new Bundle();
             if (extras != null) {
                 mExtras.putAll(extras);

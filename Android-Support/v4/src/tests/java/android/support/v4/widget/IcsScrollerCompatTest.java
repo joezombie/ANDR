@@ -20,6 +20,6 @@ import android.os.Build;
 public class IcsScrollerCompatTest extends ScrollerCompatTestBase {
 
     public IcsScrollerCompatTest() {
-        super(14);
+        super(Build.VERSION_CODES.ICE_CREAM_SANDWICH);
     }
 }

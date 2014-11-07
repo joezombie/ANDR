@@ -539,14 +539,7 @@ public class ViewDragHelper {
         mCapturedView = child;
         mActivePointerId = INVALID_POINTER;
 
-        boolean continueSliding = forceSettleCapturedViewAt(finalLeft, finalTop, 0, 0);
-        if (!continueSliding && mDragState == STATE_IDLE && mCapturedView != null) {
-            // If we're in an IDLE state to begin with and aren't moving anywhere, we
-            // end up having a non-null capturedView with an IDLE dragState
-            mCapturedView = null;
-        }
-
-        return continueSliding;
+        return forceSettleCapturedViewAt(finalLeft, finalTop, 0, 0);
     }
 
     /**
@@ -741,7 +734,7 @@ public class ViewDragHelper {
                 // Close enough. The interpolator/scroller might think we're still moving
                 // but the user sure doesn't.
                 mScroller.abortAnimation();
-                keepGoing = false;
+                keepGoing = mScroller.isFinished();
             }
 
             if (!keepGoing) {
@@ -871,7 +864,7 @@ public class ViewDragHelper {
         if (mDragState != state) {
             mDragState = state;
             mCallback.onViewDragStateChanged(state);
-            if (mDragState == STATE_IDLE) {
+            if (state == STATE_IDLE) {
                 mCapturedView = null;
             }
         }
@@ -1011,38 +1004,15 @@ public class ViewDragHelper {
                     final float dx = x - mInitialMotionX[pointerId];
                     final float dy = y - mInitialMotionY[pointerId];
 
-                    final View toCapture = findTopChildUnder((int) x, (int) y);
-                    final boolean pastSlop = toCapture != null && checkTouchSlop(toCapture, dx, dy);
-                    if (pastSlop) {
-                        // check the callback's
-                        // getView[Horizontal|Vertical]DragRange methods to know
-                        // if you can move at all along an axis, then see if it
-                        // would clamp to the same value. If you can't move at
-                        // all in every dimension with a nonzero range, bail.
-                        final int oldLeft = toCapture.getLeft();
-                        final int targetLeft = oldLeft + (int) dx;
-                        final int newLeft = mCallback.clampViewPositionHorizontal(toCapture,
-                                targetLeft, (int) dx);
-                        final int oldTop = toCapture.getTop();
-                        final int targetTop = oldTop + (int) dy;
-                        final int newTop = mCallback.clampViewPositionVertical(toCapture, targetTop,
-                                (int) dy);
-                        final int horizontalDragRange = mCallback.getViewHorizontalDragRange(
-                                toCapture);
-                        final int verticalDragRange = mCallback.getViewVerticalDragRange(toCapture);
-                        if ((horizontalDragRange == 0 || horizontalDragRange > 0
-                                && newLeft == oldLeft) && (verticalDragRange == 0
-                                || verticalDragRange > 0 && newTop == oldTop)) {
-                            break;
-                        }
-                    }
                     reportNewEdgeDrags(dx, dy, pointerId);
                     if (mDragState == STATE_DRAGGING) {
                         // Callback might have started an edge drag
                         break;
                     }
 
-                    if (pastSlop && tryCaptureViewForDrag(toCapture, pointerId)) {
+                    final View toCapture = findTopChildUnder((int) x, (int) y);
+                    if (toCapture != null && checkTouchSlop(toCapture, dx, dy) &&
+                            tryCaptureViewForDrag(toCapture, pointerId)) {
                         break;
                     }
                 }

@@ -19,25 +19,28 @@
             android:layout_gravity="top"
             android:paddingBottom="4dp"
             android:paddingTop="4dp" />
-
     </android.support.v4.view.ViewPager>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2">
+        <fragment
+                android:name="is.ru.aaad.RemindMe.ReminderFragment"
+                android:id="@+id/reminder_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:layout="@layout/reminder_detail"/>
 
-    <fragment
-        android:name="is.ru.aaad.RemindMe.ReminderFragment"
-        android:id="@+id/reminder_fragment"
-        android:layout_weight="2"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        tools:layout="@layout/reminder_detail"/>
+        <fragment
+                android:visibility="gone"
+                android:name="is.ru.aaad.RemindMe.LocationFragment"
+                android:id="@+id/location_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:layout="@layout/location_detail"/>
+    </LinearLayout>
 
-    <fragment
-        android:visibility="gone"
-        android:name="is.ru.aaad.RemindMe.LocationFragment"
-        android:id="@+id/location_fragment"
-        android:layout_weight="2"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        tools:layout="@layout/location_detail"/>
 
 
 
