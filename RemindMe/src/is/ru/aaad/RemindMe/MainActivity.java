@@ -145,16 +145,19 @@ public class MainActivity extends FragmentActivity implements
     public void addNewLocation(View view){
         if(servicesConnected()) {
             android.location.Location currentLocation = locationClient.getLastLocation();
+            Location newLocation = new Location("Location Name");
+
             if(currentLocation == null){
-                // TODO
                 Log.d(LocationUtils.APPTAG, "Could not get current location");
             } else {
-                Location newLocation = new Location("Location Name", currentLocation.getLatitude(), currentLocation.getLongitude());
-                locationsStore.add(newLocation);
-                ArrayAdapter adapter = (ArrayAdapter) mainPagerAdapter.getLocationsFragment().getListAdapter();
-                adapter.notifyDataSetChanged();
-                OnLocationSelected(locationsStore.getPosition(newLocation));
+                newLocation.setLatitude(currentLocation.getLatitude());
+                newLocation.setLongitude(currentLocation.getLongitude());
             }
+
+            locationsStore.add(newLocation);
+            ArrayAdapter adapter = (ArrayAdapter) mainPagerAdapter.getLocationsFragment().getListAdapter();
+            adapter.notifyDataSetChanged();
+            OnLocationSelected(locationsStore.getPosition(newLocation));
         }
     }
 
