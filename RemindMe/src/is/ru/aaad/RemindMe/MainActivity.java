@@ -8,10 +8,7 @@ import android.content.IntentSender;
 import android.graphics.drawable.Drawable;
 import android.location.LocationListener;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.*;
 import android.support.v4.view.ViewPager;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -24,6 +21,8 @@ import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.model.LatLng;
 import is.ru.aaad.RemindMe.Helpers.ErrorDialogFragment;
 import is.ru.aaad.RemindMe.Helpers.LocationUtils;
 import is.ru.aaad.RemindMe.Helpers.MainPagerAdapter;
@@ -45,6 +44,8 @@ public class MainActivity extends FragmentActivity implements
 
     private LocationRequest locationRequest;
     private LocationClient locationClient;
+    private SupportMapFragment mapFragment;
+    private Location location;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,6 +67,13 @@ public class MainActivity extends FragmentActivity implements
         locationRequest.setFastestInterval(LocationUtils.FAST_INTERVAL_CEILING_IN_MILLISECONDS);
 
         locationClient = new LocationClient(this, this, this);
+
+        if(isLarge) {
+            mapFragment = SupportMapFragment.newInstance();
+
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(R.id.map_frame, mapFragment).commit();
+        }
 
     }
 
@@ -150,8 +158,7 @@ public class MainActivity extends FragmentActivity implements
             if(currentLocation == null){
                 Log.d(LocationUtils.APPTAG, "Could not get current location");
             } else {
-                newLocation.setLatitude(currentLocation.getLatitude());
-                newLocation.setLongitude(currentLocation.getLongitude());
+                newLocation.setLatLng(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
             }
 
             locationsStore.add(newLocation);
@@ -175,7 +182,14 @@ public class MainActivity extends FragmentActivity implements
 
         } else {
             Log.d("LocationsFragment", "locationFragment does not equal null");
-            locationFragment.changeLocation(locationsStore.getLocationByPosition(position));
+            location = locationsStore.getLocationByPosition(position);
+            locationFragment.changeLocation(location);
+
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(
+                    location.getLatLng(),
+                    16.0f);
+
+            mapFragment.getMap().animateCamera(cameraUpdate);
         }
     }
 

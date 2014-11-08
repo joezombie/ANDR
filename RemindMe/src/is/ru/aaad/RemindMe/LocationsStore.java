@@ -15,9 +15,9 @@ public class LocationsStore {
 
     protected LocationsStore(){
         locations = new ArrayList<Location>();
-        locations.add(new Location("Kringlan", 64.132100, -21.895355 ));
-        locations.add(new Location("Smáralindin", 64.102995, -21.882890));
-        locations.add(new Location("HR", 64.123277, -21.924934));
+        locations.add(new Location("Kringlan", 64.132100, -21.895355, 30 ));
+        locations.add(new Location("Smáralindin", 64.102995, -21.882890, 20));
+        locations.add(new Location("HR", 64.123277, -21.924934, 10));
         names = new ArrayList<String>();
         updateNames();
     }
