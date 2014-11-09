@@ -25,8 +25,8 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
 
     public MainPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
-        remindersFragment = RemindersFragment.newInstance(0, "Reminders");
-        locationsFragment = LocationsFragment.newInstance(0, "Locations");
+        remindersFragment = RemindersFragment.newInstance();
+        locationsFragment = LocationsFragment.newInstance();
         this.context = context;
     }
 

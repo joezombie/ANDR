@@ -2,17 +2,12 @@ package is.ru.aaad.RemindMe;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.graphics.drawable.Drawable;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.v4.app.*;
 import android.support.v4.view.ViewPager;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -23,10 +18,13 @@ import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.LatLng;
+import is.ru.aaad.RemindMe.Data.LocationsStore;
+import is.ru.aaad.RemindMe.Data.RemindersStore;
 import is.ru.aaad.RemindMe.Helpers.ErrorDialogFragment;
 import is.ru.aaad.RemindMe.Helpers.LocationUtils;
 import is.ru.aaad.RemindMe.Helpers.MainPagerAdapter;
 import is.ru.aaad.RemindMe.Models.Location;
+import is.ru.aaad.RemindMe.Models.Reminder;
 
 /**
  * Created by Johannes Gunnar Heidarsson on 15.10.2014.
@@ -36,10 +34,12 @@ public class MainActivity extends FragmentActivity implements
         GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener,
         LocationsFragment.OnLocationSelectedListener,
+        RemindersFragment.OnReminderSelectedListener,
         ViewPager.OnPageChangeListener{
 
     private MainPagerAdapter mainPagerAdapter;
     private LocationsStore locationsStore;
+    private RemindersStore remindersStore;
     private boolean isLarge;
 
     private LocationRequest locationRequest;
@@ -54,6 +54,9 @@ public class MainActivity extends FragmentActivity implements
 
         locationsStore = LocationsStore.getInstance();
         locationsStore.setContext(this);
+
+        remindersStore = RemindersStore.getInstance();
+        remindersStore.setContext(this);
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setOnPageChangeListener(this);
@@ -171,6 +174,14 @@ public class MainActivity extends FragmentActivity implements
         }
     }
 
+    public void addNewReminder(View view){
+        remindersStore.add(new Reminder("test", "this is a test", null, false, false, Reminder.Mode.ARRIVING_LEAVING));
+        ArrayAdapter adapter = (ArrayAdapter<Reminder>) mainPagerAdapter.getRemindersFragment().getListAdapter();
+        adapter.clear();
+        adapter.addAll(remindersStore.getAll());
+
+    }
+
     @Override
     public void OnLocationSelected(int position) {
         LocationFragment locationFragment = (LocationFragment) getSupportFragmentManager().findFragmentById(R.id.location_fragment);
@@ -192,6 +203,14 @@ public class MainActivity extends FragmentActivity implements
 
             mapFragment.getMap().animateCamera(cameraUpdate);
         }
+    }
+
+    @Override
+    public void OnReminderSelected(Reminder reminder) {
+        Log.d("MainActivity", reminder.getName() + ":" + reminder.getUUID());
+        Intent intent = new Intent(this, ReminderActivity.class);
+        intent.putExtra("reminder_uuid", reminder.getUUID());
+        startActivity(intent);
     }
 
     @Override

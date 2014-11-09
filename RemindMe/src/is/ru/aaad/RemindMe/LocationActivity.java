@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
+import is.ru.aaad.RemindMe.Data.LocationsStore;
 import is.ru.aaad.RemindMe.Helpers.LocationUtils;
 import is.ru.aaad.RemindMe.Models.Location;
 
@@ -112,5 +113,14 @@ public class LocationActivity extends FragmentActivity implements
 
     public void cancelLocationEdit(View v){
         Log.d(LocationUtils.APPTAG, "CancelLocationEdit called");
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
+
+    public void removeLocation(View v){
+        Intent intent = new Intent(this, MainActivity.class);
+        locationsStore.removeLocation(location);
+        startActivity(intent);
+    }
+
 }

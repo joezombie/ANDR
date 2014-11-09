@@ -40,14 +40,20 @@
             android:id="@+id/location_save"
             android:onClick="saveLocation"
             android:text="Save"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:onClick="removeLocation"
+            android:text="Delete"
             android:layout_weight="1"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"/>
         <Button
             android:text="Cancel"
             android:onClick="cancelLocationEdit"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
+            android:layout_weight="2"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
