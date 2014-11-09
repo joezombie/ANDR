@@ -1,9 +1,15 @@
 package is.ru.aaad.RemindMe;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.util.Log;
+import is.ru.aaad.RemindMe.Helpers.LocationUtils;
 import is.ru.aaad.RemindMe.Models.Location;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Johannes Gunnar Heidarsson on 6.11.2014.
@@ -12,15 +18,10 @@ public class LocationsStore {
     private static LocationsStore locationsStore = null;
     private List<Location> locations;
     private List<String> names;
+    private Context context;
+    private SharedPreferences sharedPreferences;
 
-    protected LocationsStore(){
-        locations = new ArrayList<Location>();
-        locations.add(new Location("Kringlan", 64.132100, -21.895355, 30 ));
-        locations.add(new Location("Smáralindin", 64.102995, -21.882890, 20));
-        locations.add(new Location("HR", 64.123277, -21.924934, 10));
-        names = new ArrayList<String>();
-        updateNames();
-    }
+    protected LocationsStore(){}
 
     public static LocationsStore getInstance(){
         if(locationsStore == null){
@@ -28,6 +29,13 @@ public class LocationsStore {
         }
         return locationsStore;
     }
+
+    public void setContext(Context context) {
+        this.context = context;
+        sharedPreferences = context.getSharedPreferences("LocationsStore", Context.MODE_PRIVATE);
+        readLocationsFromSharedPrefs();
+    }
+
 
     public void updateNames(){
         names.clear();
@@ -45,8 +53,87 @@ public class LocationsStore {
     }
 
     public void add(Location location){
+        Log.d("LocationsStore", "Adding location: " + location.toString());
+
+        saveLocationToSharedPrefs(location);
+
         locations.add(location);
         names.add(location.getName());
+    }
+
+    public void updateLocation(Location location){
+        Log.d("LocationsStore", "Updating location: " + location.toString());
+        int position = getPosition(location);
+        if(position < 0){
+            locations.set(position, location);
+            updateNames();
+        } else {
+            add(location);
+        }
+    }
+
+    public void removeLocation(Location location){
+        Set<String> locationUUIDs = sharedPreferences.getStringSet("locations_uuids", new HashSet<String>());
+        locationUUIDs.remove(location.getUUID());
+
+        sharedPreferences.edit()
+                .putStringSet("locations_uuids", locationUUIDs)
+                .remove(location.getUUID() + "_latitude")
+                .remove(location.getUUID() + "_longitude")
+                .remove(location.getUUID() + "_radius")
+                .remove(location.getUUID() + "_name")
+                .apply();
+
+        readLocationsFromSharedPrefs();
+    }
+
+    private void saveLocationToSharedPrefs(Location l){
+
+        Set<String> locationUUIDs = sharedPreferences.getStringSet("locations_uuids", new HashSet<String>());
+
+        locationUUIDs.add(l.getUUID());
+
+        sharedPreferences.edit()
+                .putStringSet("locations_uuids", locationUUIDs)
+                .putLong(l.getUUID() + "_latitude", Double.doubleToRawLongBits(l.getLatitude()))
+                .putLong(l.getUUID() + "_longitude", Double.doubleToLongBits(l.getLongitude()))
+                .putLong(l.getUUID() + "_radius", Double.doubleToRawLongBits(l.getRadius()))
+                .putString(l.getUUID() + "_name", l.getName())
+                .apply();
+
+    }
+
+    private void readLocationsFromSharedPrefs(){
+        if(locations == null){
+            locations = new ArrayList<Location>();
+        } else {
+            locations.clear();
+        }
+
+        if(names == null){
+            names = new ArrayList<String>();
+        } else {
+            names.clear();
+        }
+
+        Set<String> locationUUIDs = sharedPreferences.getStringSet("locations_uuids", new HashSet<String>());
+
+        for(String uuid: locationUUIDs){
+            Log.d("LocationsStore", "Reading UUID: " + uuid);
+            String name = sharedPreferences.getString(uuid + "_name", null);
+            if(name != null) {
+                locations.add(new Location(
+                        uuid,
+                        name,
+                        Double.longBitsToDouble(sharedPreferences.getLong(uuid + "_latitude", 0)),
+                        Double.longBitsToDouble(sharedPreferences.getLong(uuid + "_longitude", 0)),
+                        Double.longBitsToDouble(sharedPreferences.getLong(uuid + "_radius", 0))
+                ));
+                names.add(name);
+            } else {
+                Log.d("LocationsStore", "Could not find Location with UUDID: " + uuid);
+            }
+        }
     }
 
     public int getPosition(Location location){
@@ -56,4 +143,6 @@ public class LocationsStore {
     public Location getLocationByPosition(int position){
         return locations.get(position);
     }
+
+
 }

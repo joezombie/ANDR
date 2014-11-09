@@ -31,11 +31,14 @@ public final class LocationUtils {
 
     // Name of shared preferences repository that stores persistent state
     public static final String SHARED_PREFERENCES =
-            "com.example.android.location.SHARED_PREFERENCES";
+            "is.ru.aad.remindme.models.location.SHARED_PREFERENCES";
+
+    public static final String KEY_PREFIX =
+            "is.ru.aad.remindme.models.location.KEY";
 
     // Key for storing the "updates requested" flag in shared preferences
     public static final String KEY_UPDATES_REQUESTED =
-            "com.example.android.location.KEY_UPDATES_REQUESTED";
+            "is.ru.aad.remindme.models.location.KEY_UPDATES_REQUESTED";
 
     /*
      * Define a request code to send to Google Play services

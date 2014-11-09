@@ -39,7 +39,7 @@ public class MainActivity extends FragmentActivity implements
         ViewPager.OnPageChangeListener{
 
     private MainPagerAdapter mainPagerAdapter;
-    private LocationsStore locationsStore = LocationsStore.getInstance();
+    private LocationsStore locationsStore;
     private boolean isLarge;
 
     private LocationRequest locationRequest;
@@ -51,6 +51,9 @@ public class MainActivity extends FragmentActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        locationsStore = LocationsStore.getInstance();
+        locationsStore.setContext(this);
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setOnPageChangeListener(this);
@@ -171,8 +174,6 @@ public class MainActivity extends FragmentActivity implements
     @Override
     public void OnLocationSelected(int position) {
         LocationFragment locationFragment = (LocationFragment) getSupportFragmentManager().findFragmentById(R.id.location_fragment);
-        //LocationFragment locationFragment = null;
-
 
         if(locationFragment == null){
             Log.d("LocationsFragment", "locationFragment does equal null");

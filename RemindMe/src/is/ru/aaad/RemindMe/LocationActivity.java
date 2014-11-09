@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
 import is.ru.aaad.RemindMe.Helpers.LocationUtils;
@@ -97,6 +98,16 @@ public class LocationActivity extends FragmentActivity implements
 
     public void saveLocation(View v){
         Log.d(LocationUtils.APPTAG, "saveLocation called");
+        location.setLatLng(marker.getPosition());
+        EditText locationName = (EditText) findViewById(R.id.location_name);
+        EditText locationRadius = (EditText) findViewById(R.id.location_radius);
+        location.setName(locationName.getText().toString());
+        location.setRadius(Double.parseDouble(locationRadius.getText().toString()));
+        locationsStore.updateLocation(location);
+
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+
     }
 
     public void cancelLocationEdit(View v){
